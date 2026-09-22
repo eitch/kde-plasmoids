@@ -1,0 +1,18 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "eitch"
+      }
+    ],
+    "Category": "Utilities",
+    "Description": "Aggregate monitor status across public and authenticated Uptime Kuma dashboards",
+    "Icon": "network-server",
+    "Id": "ch.eitchnet.uptimekuma.status",
+    "License": "AGPL",
+    "Name": "Uptime Kuma Status",
+    "Version": "1.0.1"
+  },
+  "KPackageStructure": "Plasma/Applet",
+  "X-Plasma-API-Minimum-Version": "6.0"
+}
