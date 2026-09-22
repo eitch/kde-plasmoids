@@ -16,7 +16,7 @@ To install or upgrade the plasmoid, run from the `chronivaro-plasmoid` directory
 ./install.sh
 ```
 
-The script automatically detects if the widget is already installed and performs an upgrade or fresh installation accordingly.
+The script automatically detects if the widget is already installed and performs an upgrade or fresh installation accordingly. After a successful installation, it asks whether to restart Plasma to load the widget. Answer `y` or `yes` to restart; Enter, any other answer, or closed input skips the restart. Apply pending widget settings first. Restarting briefly hides the panel and desktop.
 
 Manual installation/upgrade commands with `kpackagetool6`:
 ```bash
