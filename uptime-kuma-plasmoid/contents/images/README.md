@@ -1,0 +1,1 @@
+`uptime-kuma.svg` is the application icon from https://github.com/louislam/uptime-kuma/blob/master/public/icon.svg, retrieved on 2026-09-25, used unchanged with runtime status tinting. See `LICENSE.uptime-kuma` for its MIT license.

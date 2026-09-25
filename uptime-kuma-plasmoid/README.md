@@ -4,6 +4,8 @@ A Plasma 6 widget that combines monitor health from multiple Uptime Kuma sources
 
 Supports Uptime Kuma 2.5.x public status pages and private instances through their Prometheus metrics endpoint. No Node.js service, browser login session or additional WebSocket module is needed.
 
+The panel uses the Uptime Kuma application icon, colored green when operational, red during an outage, amber while pending, blue during maintenance, and gray when paused or unavailable. Status text remains available in the tooltip and popup.
+
 ## Install
 
 From this directory:

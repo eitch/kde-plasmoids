@@ -18,7 +18,15 @@ A collection of KDE Plasma 6 widgets for tracking work time and monitoring servi
 
 ## Install or upgrade
 
-Run the installer for the widget you want from this directory:
+Install or upgrade both widgets from this directory:
+
+```bash
+./install.sh
+```
+
+The root installer offers one Plasma restart after both installations succeed.
+
+Alternatively, run the installer for an individual widget:
 
 ```bash
 ./chronivaro-plasmoid/install.sh

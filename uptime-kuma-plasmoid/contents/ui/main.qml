@@ -149,25 +149,13 @@ PlasmoidItem {
     compactRepresentation: Item {
         implicitWidth: Kirigami.Units.iconSizes.smallMedium
         implicitHeight: implicitWidth
-        Rectangle {
+        Kirigami.Icon {
             anchors.centerIn: parent
-            width: Math.min(parent.width, parent.height) * 0.8
+            width: Math.min(parent.width, parent.height)
             height: width
-            radius: width / 2
+            source: Qt.resolvedUrl("../images/uptime-kuma.svg")
+            isMask: true
             color: root.tint(root.overall)
-            Controls.Label {
-                anchors.centerIn: parent
-                text: ({
-                    up: "✓",
-                    down: "!",
-                    unknown: "?",
-                    pending: "…",
-                    maintenance: "−",
-                    paused: "Ⅱ"
-                })[root.overall]
-                color: "white"
-                font.bold: true
-            }
         }
 
         MouseArea {

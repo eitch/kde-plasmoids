@@ -295,11 +295,12 @@ PlasmoidItem {
         implicitWidth: Kirigami.Units.iconSizes.smallMedium
         implicitHeight: Kirigami.Units.iconSizes.smallMedium
 
-        Rectangle {
+        Kirigami.Icon {
             anchors.centerIn: parent
-            width: Math.min(parent.width, parent.height) * 0.65
+            width: Math.min(parent.width, parent.height)
             height: width
-            radius: width / 2
+            source: Qt.resolvedUrl("../images/chronivaro.svg")
+            isMask: true
 
             color: {
                 if (!root.reachable) {
@@ -328,10 +329,11 @@ PlasmoidItem {
         RowLayout {
             Layout.fillWidth: true
 
-            Rectangle {
-                width: Kirigami.Units.iconSizes.medium
-                height: width
-                radius: width / 2
+            Kirigami.Icon {
+                Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+                Layout.preferredHeight: Layout.preferredWidth
+                source: Qt.resolvedUrl("../images/chronivaro.svg")
+                isMask: true
 
                 color: {
                     if (!root.reachable) {

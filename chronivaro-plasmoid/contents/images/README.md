@@ -1,0 +1,1 @@
+`chronivaro.svg` is a monochrome adaptation of Chronivaro’s `chronivaro-web/src/main/webapp/assets/icons/chronivaro-favicon-v2-light.svg` from https://github.com/strolch-li/Chronivaro (AGPL-3.0). The background was removed and the strokes made solid for runtime status tinting.

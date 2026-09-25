@@ -2,6 +2,8 @@
 
 A KDE Plasma 6 widget for [Chronivaro](https://github.com/strolch-li/Chronivaro) to monitor work timer status, view daily and monthly balances, and start or stop the timer directly from the desktop panel.
 
+The panel and popup use the Chronivaro application icon: green while the timer is running, red when stopped, and gray when unavailable.
+
 ## Features
 
 - **Timer Status & Balances**: Displays current timer state, today's balance/actual/target hours, and current month balances.
