@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+
+    <group name="General">
+        <entry name="brokerProvider" type="String">
+            <default>yahoo</default>
+        </entry>
+
+        <entry name="brokerEndpoint" type="String">
+            <default>https://query1.finance.yahoo.com/v8/finance/chart/</default>
+        </entry>
+
+        <entry name="authType" type="String">
+            <default>none</default>
+        </entry>
+
+        <entry name="token" type="String">
+            <default></default>
+        </entry>
+
+        <entry name="pollInterval" type="Int">
+            <default>60</default>
+        </entry>
+
+        <entry name="displaySymbol" type="String">
+            <default>SMI</default>
+        </entry>
+
+        <entry name="watchlist" type="String">
+            <default>[{"symbol":"SMI","name":"Swiss Market Index","market":"SIX","currency":"CHF","enabled":true},{"symbol":"EURCHF","name":"EUR / CHF","market":"Forex","currency":"CHF","enabled":true}]</default>
+        </entry>
+
+        <entry name="settingsSaved" type="Bool">
+            <default>false</default>
+        </entry>
+    </group>
+</kcfg>

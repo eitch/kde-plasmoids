@@ -1,0 +1,18 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "eitch"
+      }
+    ],
+    "Category": "Utilities",
+    "Description": "Monitor user-selectable stock markets, equities, and currency rates from Swiss brokers",
+    "Icon": "view-financial-category",
+    "Id": "ch.eitchnet.stockmarket.status",
+    "License": "AGPL",
+    "Name": "Swiss Stock Market",
+    "Version": "1.0.0"
+  },
+  "KPackageStructure": "Plasma/Applet",
+  "X-Plasma-API-Minimum-Version": "6.0"
+}

@@ -23,8 +23,9 @@ install_widget() {
 
 install_widget chronivaro-plasmoid ch.eitchnet.chronivaro.status
 install_widget uptime-kuma-plasmoid ch.eitchnet.uptimekuma.status
+install_widget swiss-stock-market-plasmoid ch.eitchnet.stockmarket.status
 
-echo "Both widgets installed. Restarting Plasma reloads them and briefly hides the panel and desktop."
+echo "All widgets installed. Restarting Plasma reloads them and briefly hides the panel and desktop."
 if read -r -p "Restart Plasma now? [y/N] " restart_reply; then
     case "$restart_reply" in
         [yY]|[yY][eE][sS])

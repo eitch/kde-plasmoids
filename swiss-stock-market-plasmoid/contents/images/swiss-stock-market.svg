@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="swissRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e74c3c"/>
+      <stop offset="100%" stop-color="#c0392b"/>
+    </linearGradient>
+    <linearGradient id="chartGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2ecc71"/>
+      <stop offset="100%" stop-color="#27ae60"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded card -->
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="#2c3e50" stroke="#34495e" stroke-width="2"/>
+
+  <!-- Swiss Flag small corner badge -->
+  <rect x="6" y="6" width="14" height="14" rx="3" fill="url(#swissRed)"/>
+  <rect x="11.5" y="8" width="3" height="10" fill="#ffffff"/>
+  <rect x="8" y="11.5" width="10" height="3" fill="#ffffff"/>
+
+  <!-- Candlesticks / Bars -->
+  <rect x="24" y="32" width="4" height="16" rx="1" fill="#7f8c8d"/>
+  <line x1="26" y1="28" x2="26" y2="52" stroke="#7f8c8d" stroke-width="1.5" stroke-linecap="round"/>
+
+  <rect x="34" y="26" width="4" height="22" rx="1" fill="#e74c3c"/>
+  <line x1="36" y1="22" x2="36" y2="50" stroke="#e74c3c" stroke-width="1.5" stroke-linecap="round"/>
+
+  <rect x="44" y="18" width="4" height="26" rx="1" fill="url(#chartGreen)"/>
+  <line x1="46" y1="14" x2="46" y2="48" stroke="#2ecc71" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Trend upward line & arrow -->
+  <polyline points="10,48 24,42 36,36 48,20 54,16" fill="none" stroke="#2ecc71" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="58,14 50,15 55,21" fill="#2ecc71"/>
+</svg>
