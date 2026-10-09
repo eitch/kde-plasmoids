@@ -2,13 +2,16 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as Controls
 import org.kde.kirigami as Kirigami
+import org.kde.kcmutils as KCM
 import "../code/Kuma.js" as Kuma
 
-ColumnLayout {
+KCM.SimpleKCM {
     id: config
 
     property string cfg_dashboards: "[]"
     property alias cfg_pollInterval: interval.value
+    property string cfg_dashboardsDefault: "[]"
+    property int cfg_pollIntervalDefault: 60
     property var entries: []
     property string message: ""
     readonly property var sourceTypes: ["public", "admin", "password"]
@@ -41,11 +44,14 @@ ColumnLayout {
         id: wallet
     }
 
-    Controls.Label {
-        Layout.fillWidth: true
-        text: "Add public status pages and administration dashboards. API keys and passwords are stored only in KWallet."
-        wrapMode: Text.WordWrap
-    }
+    ColumnLayout {
+        spacing: Kirigami.Units.mediumSpacing
+
+        Controls.Label {
+            Layout.fillWidth: true
+            text: "Add public status pages and administration dashboards. API keys and passwords are stored only in KWallet."
+            wrapMode: Text.WordWrap
+        }
 
     RowLayout {
         Controls.Label {
@@ -78,7 +84,7 @@ ColumnLayout {
                     Layout.fillWidth: true
                     title: "Dashboard " + (index + 1)
                     ColumnLayout {
-                        anchors.fill: parent
+                        Layout.fillWidth: true
                         Controls.TextField {
                             Layout.fillWidth: true
                             placeholderText: "Display name"
@@ -215,4 +221,5 @@ ColumnLayout {
         textFormat: Text.PlainText
         wrapMode: Text.WordWrap
     }
+}
 }
