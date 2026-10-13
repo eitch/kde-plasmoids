@@ -5,7 +5,7 @@ const vm = require("vm");
 
 const walletSource = fs.readFileSync(path.join(__dirname, "../contents/ui/Wallet.qml"), "utf8");
 const walletFunctions = walletSource.slice(
-    walletSource.indexOf("    function call"),
+    walletSource.indexOf("    function callDBus"),
     walletSource.lastIndexOf("\n}")
 );
 

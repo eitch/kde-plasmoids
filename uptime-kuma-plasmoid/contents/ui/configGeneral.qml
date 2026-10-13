@@ -10,8 +10,10 @@ KCM.SimpleKCM {
 
     property string cfg_dashboards: "[]"
     property alias cfg_pollInterval: interval.value
+    property bool cfg_settingsSaved: false
     property string cfg_dashboardsDefault: "[]"
     property int cfg_pollIntervalDefault: 60
+    property bool cfg_settingsSavedDefault: false
     property var entries: []
     property string message: ""
     readonly property var sourceTypes: ["public", "admin", "password"]

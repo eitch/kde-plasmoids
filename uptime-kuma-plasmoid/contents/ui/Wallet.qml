@@ -7,7 +7,7 @@ QtObject {
     readonly property string appId: "Uptime Kuma Plasmoid"
     readonly property string folder: "UptimeKuma"
 
-    function call(member, signature, argumentsList, onSuccess, onFailure) {
+    function callDBus(member, signature, argumentsList, onSuccess, onFailure) {
         const request = {
             service: "org.kde.kwalletd6",
             path: "/modules/kwalletd6",
@@ -37,9 +37,9 @@ QtObject {
             onComplete(errorMessage, "")
         }
 
-        call("networkWallet", "", [], function(walletName) {
+        callDBus("networkWallet", "", [], function(walletName) {
             const openArguments = [walletName || "kdewallet", 0, appId]
-            call("open", "sxs", openArguments, function(walletHandle) {
+            callDBus("open", "sxs", openArguments, function(walletHandle) {
                 if (typeof walletHandle !== "number" || walletHandle < 0) {
                     onComplete("KWallet is locked or access was denied.", "")
                     return
@@ -51,7 +51,7 @@ QtObject {
 
     function accessOpenWallet(walletHandle, key, password, writing, onComplete) {
         function finish(errorMessage, storedPassword) {
-            call("close", "ibs", [walletHandle, false, appId], null, null)
+            callDBus("close", "ibs", [walletHandle, false, appId], null, null)
             onComplete(errorMessage, storedPassword)
         }
 
@@ -62,12 +62,12 @@ QtObject {
         function readOrWritePassword() {
             if (writing) {
                 const writeArguments = [walletHandle, folder, key, password, appId]
-                call("writePassword", "issss", writeArguments, function(resultCode) {
+                callDBus("writePassword", "issss", writeArguments, function(resultCode) {
                     finish(resultCode === 0 ? "" : "Could not save the password.", "")
                 }, failAfterOpen)
             } else {
                 const readArguments = [walletHandle, folder, key, appId]
-                call("readPassword", "isss", readArguments, function(storedPassword) {
+                callDBus("readPassword", "isss", readArguments, function(storedPassword) {
                     const errorMessage = storedPassword
                         ? ""
                         : "No password stored. Save one in the widget settings."
@@ -77,11 +77,11 @@ QtObject {
         }
 
         const folderArguments = [walletHandle, folder, appId]
-        call("hasFolder", "iss", folderArguments, function(folderExists) {
+        callDBus("hasFolder", "iss", folderArguments, function(folderExists) {
             if (folderExists) {
                 readOrWritePassword()
             } else if (writing) {
-                call("createFolder", "iss", folderArguments, function(folderCreated) {
+                callDBus("createFolder", "iss", folderArguments, function(folderCreated) {
                     if (folderCreated) {
                         readOrWritePassword()
                     } else {
