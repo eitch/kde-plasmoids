@@ -15,6 +15,7 @@ KCM.SimpleKCM {
     property alias cfg_pollInterval: intervalSpinBox.value
     property string cfg_displaySymbol: "SMI"
     property string cfg_watchlist: "[]"
+    property string cfg_browser: ""
     property bool cfg_settingsSaved: false
 
     property string cfg_brokerProviderDefault
@@ -24,6 +25,7 @@ KCM.SimpleKCM {
     property int cfg_pollIntervalDefault
     property string cfg_displaySymbolDefault
     property string cfg_watchlistDefault
+    property string cfg_browserDefault
     property bool cfg_settingsSavedDefault
 
     property var items: []
@@ -217,7 +219,7 @@ KCM.SimpleKCM {
                     request.setRequestHeader("Authorization", "Bearer " + tokenField.text.trim())
                     request.setRequestHeader("X-API-KEY", tokenField.text.trim())
                 } else if (cfg_authType === "basic") {
-                    request.setRequestHeader("Authorization", "Basic " + Qt.btoa("user:" + tokenField.text.trim()))
+                    request.setRequestHeader("Authorization", "Basic " + Market.base64Encode("user:" + tokenField.text.trim()))
                 }
             }
             request.send()
@@ -260,9 +262,11 @@ KCM.SimpleKCM {
         }
     }
 
-    Wallet {
-        id: wallet
-    }
+    data: [
+        Wallet {
+            id: wallet
+        }
+    ]
 
     Component.onCompleted: {
         loadWatchlist()
@@ -450,6 +454,72 @@ KCM.SimpleKCM {
                     to: 3600
                     value: 60
                     editable: true
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                Controls.Label {
+                    text: "Web Browser:"
+                    Layout.minimumWidth: 140
+                }
+                Controls.ComboBox {
+                    id: browserCombo
+                    Layout.fillWidth: true
+                    textRole: "name"
+                    valueRole: "id"
+                    model: [
+                        { id: "", name: "System Default" },
+                        { id: "brave", name: "Brave" },
+                        { id: "firefox", name: "Mozilla Firefox" },
+                        { id: "google-chrome", name: "Google Chrome" },
+                        { id: "chromium", name: "Chromium" },
+                        { id: "custom", name: "Custom Command..." }
+                    ]
+                    currentIndex: {
+                        const val = (configRoot.cfg_browser || "").trim()
+                        for (let i = 0; i < model.length - 1; i++) {
+                            if (model[i].id === val) return i
+                        }
+                        return model.length - 1
+                    }
+                    onActivated: {
+                        const selectedId = model[currentIndex].id
+                        if (selectedId !== "custom") {
+                            configRoot.cfg_browser = selectedId
+                        } else {
+                            configRoot.cfg_browser = customBrowserField.text.trim() || "brave"
+                        }
+                        console.log("[SwissStockMarket Settings] Web browser changed to:", configRoot.cfg_browser)
+                    }
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                visible: browserCombo.currentIndex === browserCombo.model.length - 1
+                Controls.Label {
+                    text: "Custom Command:"
+                    Layout.minimumWidth: 140
+                }
+                Controls.TextField {
+                    id: customBrowserField
+                    Layout.fillWidth: true
+                    placeholderText: "e.g. brave, firefox, or /usr/bin/brave %u"
+                    text: {
+                        const val = (configRoot.cfg_browser || "").trim()
+                        const standardIds = ["", "brave", "firefox", "google-chrome", "chromium"]
+                        if (standardIds.indexOf(val) === -1) {
+                            return val
+                        }
+                        return ""
+                    }
+                    onTextChanged: {
+                        if (browserCombo.currentIndex === browserCombo.model.length - 1) {
+                            configRoot.cfg_browser = text.trim()
+                            console.log("[SwissStockMarket Settings] Custom browser command set to:", configRoot.cfg_browser)
+                        }
+                    }
                 }
             }
         }

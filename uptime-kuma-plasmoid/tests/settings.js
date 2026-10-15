@@ -17,9 +17,10 @@ const dashboards = JSON.stringify([{
     password: "secret",
     apiKey: "secret"
 }]);
-const savedSnapshot = settingsData.snapshot(dashboards, 123);
+const savedSnapshot = settingsData.snapshot(dashboards, 123, "brave");
 assert.ok(!savedSnapshot.includes("secret"));
 assert.equal(settingsData.decode(savedSnapshot).pollInterval, 123);
+assert.equal(settingsData.decode(savedSnapshot).browser, "brave");
 assert.equal(JSON.parse(settingsData.decode(savedSnapshot).dashboards)[0].name, "Private");
 
 const invalidSnapshots = [
@@ -49,14 +50,15 @@ function createSettingsHarness(configuration, recoverySnapshot) {
         configError: "",
         backup: {
             read: () => settingsData.decode(storedSnapshot),
-            save: (dashboardRows, pollInterval) => {
-                storedSnapshot = settingsData.snapshot(dashboardRows, pollInterval);
+            save: (dashboardRows, pollInterval, browser) => {
+                storedSnapshot = settingsData.snapshot(dashboardRows, pollInterval, browser);
             }
         },
         plasmoid: {
             configuration: Object.assign({
                 dashboards: "[]",
                 pollInterval: 60,
+                browser: "",
                 settingsSaved: false,
                 writeConfig: () => {
                     ++writeCount;
@@ -78,6 +80,7 @@ function createSettingsHarness(configuration, recoverySnapshot) {
 const recoveryHarness = createSettingsHarness({}, savedSnapshot);
 recoveryHarness.context.initializeSettings();
 assert.equal(recoveryHarness.context.plasmoid.configuration.pollInterval, 123);
+assert.equal(recoveryHarness.context.plasmoid.configuration.browser, "brave");
 assert.equal(
     JSON.parse(recoveryHarness.context.plasmoid.configuration.dashboards)[0].name,
     "Private"
@@ -100,7 +103,8 @@ const migrationHarness = createSettingsHarness({
         type: "public",
         url: "https://status.test/status/main"
     }]),
-    pollInterval: 90
+    pollInterval: 90,
+    browser: "google-chrome"
 }, savedSnapshot);
 migrationHarness.context.initializeSettings();
 assert.equal(
@@ -108,6 +112,7 @@ assert.equal(
     "Current"
 );
 assert.equal(settingsData.decode(migrationHarness.storedSnapshot()).pollInterval, 90);
+assert.equal(settingsData.decode(migrationHarness.storedSnapshot()).browser, "google-chrome");
 
 migrationHarness.context.plasmoid.configuration.pollInterval = 180;
 migrationHarness.context.persistSettings();

@@ -117,7 +117,7 @@ Item {
                     request.setRequestHeader("X-API-KEY", credential)
                 } else if (brokerConfig.authType === "basic") {
                     const username = brokerConfig.username || "user"
-                    request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + credential))
+                    request.setRequestHeader("Authorization", "Basic " + Market.base64Encode(username + ":" + credential))
                 }
             } else if (brokerConfig.token) {
                 request.setRequestHeader("Authorization", "Bearer " + brokerConfig.token)
@@ -164,7 +164,7 @@ Item {
                     request.setRequestHeader("X-API-KEY", credential)
                 } else if (brokerConfig.authType === "basic") {
                     const username = brokerConfig.username || "user"
-                    request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + credential))
+                    request.setRequestHeader("Authorization", "Basic " + Market.base64Encode(username + ":" + credential))
                 }
             } else if (brokerConfig.token) {
                 request.setRequestHeader("Authorization", "Bearer " + brokerConfig.token)

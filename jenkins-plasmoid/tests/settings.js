@@ -19,10 +19,11 @@ const servers = JSON.stringify([{
     password: "secret-password"
 }]);
 
-const savedSnapshot = settingsData.snapshot(servers, 120);
+const savedSnapshot = settingsData.snapshot(servers, 120, "brave");
 assert.ok(!savedSnapshot.includes("secret-token"));
 assert.ok(!savedSnapshot.includes("secret-password"));
 assert.equal(settingsData.decode(savedSnapshot).pollInterval, 120);
+assert.equal(settingsData.decode(savedSnapshot).browser, "brave");
 assert.equal(JSON.parse(settingsData.decode(savedSnapshot).servers)[0].name, "CI Server");
 
 const invalidSnapshots = [
@@ -52,14 +53,15 @@ function createSettingsHarness(configuration, recoverySnapshot) {
         configError: "",
         backup: {
             read: () => settingsData.decode(storedSnapshot),
-            save: (serverRows, pollInterval) => {
-                storedSnapshot = settingsData.snapshot(serverRows, pollInterval);
+            save: (serverRows, pollInterval, browser) => {
+                storedSnapshot = settingsData.snapshot(serverRows, pollInterval, browser);
             }
         },
         plasmoid: {
             configuration: Object.assign({
                 servers: "[]",
                 pollInterval: 60,
+                browser: "",
                 settingsSaved: false,
                 writeConfig: () => {
                     ++writeCount;
@@ -81,6 +83,7 @@ function createSettingsHarness(configuration, recoverySnapshot) {
 const recoveryHarness = createSettingsHarness({}, savedSnapshot);
 recoveryHarness.context.initializeSettings();
 assert.equal(recoveryHarness.context.plasmoid.configuration.pollInterval, 120);
+assert.equal(recoveryHarness.context.plasmoid.configuration.browser, "brave");
 assert.equal(
     JSON.parse(recoveryHarness.context.plasmoid.configuration.servers)[0].name,
     "CI Server"
@@ -101,7 +104,8 @@ const migrationHarness = createSettingsHarness({
         type: "anonymous",
         url: "https://jenkins-new.test"
     }]),
-    pollInterval: 30
+    pollInterval: 30,
+    browser: "firefox"
 }, savedSnapshot);
 migrationHarness.context.initializeSettings();
 assert.equal(
@@ -109,5 +113,6 @@ assert.equal(
     "New Server"
 );
 assert.equal(settingsData.decode(migrationHarness.storedSnapshot()).pollInterval, 30);
+assert.equal(settingsData.decode(migrationHarness.storedSnapshot()).browser, "firefox");
 
 console.log("Jenkins settings backup, recovery, migration and intentional deletion checks passed");

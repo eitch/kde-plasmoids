@@ -14,14 +14,15 @@ QtObject {
         return SettingsData.decode(storage.value("snapshot", ""))
     }
 
-    function save(watchlist, pollInterval, brokerProvider, brokerEndpoint, authType, displaySymbol) {
+    function save(watchlist, pollInterval, brokerProvider, brokerEndpoint, authType, displaySymbol, browser) {
         const serializedSnapshot = SettingsData.snapshot(
             watchlist,
             pollInterval,
             brokerProvider,
             brokerEndpoint,
             authType,
-            displaySymbol
+            displaySymbol,
+            browser
         )
         storage.setValue("snapshot", serializedSnapshot)
         storage.sync()

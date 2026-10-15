@@ -10,9 +10,11 @@ KCM.SimpleKCM {
 
     property string cfg_servers: "[]"
     property alias cfg_pollInterval: interval.value
+    property string cfg_browser: ""
     property bool cfg_settingsSaved: false
     property string cfg_serversDefault: "[]"
     property int cfg_pollIntervalDefault: 60
+    property string cfg_browserDefault: ""
     property bool cfg_settingsSavedDefault: false
     property var entries: []
     property string message: ""
@@ -41,9 +43,11 @@ KCM.SimpleKCM {
 
     Component.onCompleted: load()
 
-    Wallet {
-        id: wallet
-    }
+    data: [
+        Wallet {
+            id: wallet
+        }
+    ]
 
     ColumnLayout {
         spacing: Kirigami.Units.mediumSpacing
@@ -65,6 +69,74 @@ KCM.SimpleKCM {
                 to: 3600
                 value: 60
                 editable: true
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            Controls.Label {
+                text: "Web browser:"
+            }
+
+            Controls.ComboBox {
+                id: browserCombo
+                Layout.fillWidth: true
+                textRole: "name"
+                valueRole: "id"
+                model: [
+                    { id: "", name: "System Default" },
+                    { id: "brave", name: "Brave" },
+                    { id: "firefox", name: "Mozilla Firefox" },
+                    { id: "google-chrome", name: "Google Chrome" },
+                    { id: "chromium", name: "Chromium" },
+                    { id: "custom", name: "Custom Command..." }
+                ]
+                currentIndex: {
+                    const val = (config.cfg_browser || "").trim()
+                    for (let i = 0; i < model.length - 1; i++) {
+                        if (model[i].id === val) return i
+                    }
+                    return model.length - 1
+                }
+                onActivated: {
+                    const selectedId = model[currentIndex].id
+                    if (selectedId !== "custom") {
+                        config.cfg_browser = selectedId
+                    } else {
+                        config.cfg_browser = customBrowserField.text.trim() || "brave"
+                    }
+                    console.log("[Jenkins Settings] Web browser changed to:", config.cfg_browser)
+                }
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            visible: browserCombo.currentIndex === browserCombo.model.length - 1
+
+            Controls.Label {
+                text: "Custom command:"
+            }
+
+            Controls.TextField {
+                id: customBrowserField
+                Layout.fillWidth: true
+                placeholderText: "e.g. brave, firefox, or /usr/bin/brave %u"
+                text: {
+                    const val = (config.cfg_browser || "").trim()
+                    const standardIds = ["", "brave", "firefox", "google-chrome", "chromium"]
+                    if (standardIds.indexOf(val) === -1) {
+                        return val
+                    }
+                    return ""
+                }
+                onTextChanged: {
+                    if (browserCombo.currentIndex === browserCombo.model.length - 1) {
+                        config.cfg_browser = text.trim()
+                        console.log("[Jenkins Settings] Custom browser command set to:", config.cfg_browser)
+                    }
+                }
             }
         }
 

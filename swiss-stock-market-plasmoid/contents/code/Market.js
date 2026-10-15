@@ -723,3 +723,46 @@ function buildSymbolsQuery(watchlist) {
         .map(function(item) { return encodeURIComponent(item.symbol.trim()); });
     return symbols.join(",");
 }
+
+function getSwissquoteUrl(quote) {
+    if (!quote) {
+        return "https://www.swissquote.ch";
+    }
+    if (typeof quote === "string") {
+        var trimmed = quote.trim();
+        if (!trimmed) return "https://www.swissquote.ch";
+        return "https://en.swissquote.com/trading/markets/search?query=" + encodeURIComponent(trimmed);
+    }
+    if (quote.isin && typeof quote.isin === "string" && quote.isin.trim().length === 12) {
+        return "https://en.swissquote.com/trading/markets/search?query=" + encodeURIComponent(quote.isin.trim());
+    }
+    if (quote.symbol && typeof quote.symbol === "string" && quote.symbol.trim().length > 0) {
+        return "https://en.swissquote.com/trading/markets/search?query=" + encodeURIComponent(quote.symbol.trim());
+    }
+    return "https://www.swissquote.ch";
+}
+
+function base64Encode(str) {
+    const text = String(str || "");
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    let encoded = "";
+    let c1, c2, c3, e1, e2, e3, e4;
+    let i = 0;
+    const utf8 = unescape(encodeURIComponent(text));
+    while (i < utf8.length) {
+        c1 = utf8.charCodeAt(i++);
+        c2 = utf8.charCodeAt(i++);
+        c3 = utf8.charCodeAt(i++);
+        e1 = c1 >> 2;
+        e2 = ((c1 & 3) << 4) | (c2 >> 4);
+        e3 = ((c2 & 15) << 2) | (c3 >> 6);
+        e4 = c3 & 63;
+        if (isNaN(c2)) {
+            e3 = e4 = 64;
+        } else if (isNaN(c3)) {
+            e4 = 64;
+        }
+        encoded += chars.charAt(e1) + chars.charAt(e2) + chars.charAt(e3) + chars.charAt(e4);
+    }
+    return encoded;
+}

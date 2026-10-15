@@ -1,5 +1,5 @@
 // Keep credentials out of the independent, per-widget recovery file.
-function snapshot(dashboards, pollInterval) {
+function snapshot(dashboards, pollInterval, browser) {
     const entries = JSON.parse(dashboards);
     if (!Array.isArray(entries)) {
         throw new Error("Invalid dashboard settings");
@@ -28,7 +28,8 @@ function snapshot(dashboards, pollInterval) {
     return JSON.stringify({
         version: 1,
         dashboards: JSON.stringify(savedEntries),
-        pollInterval: pollInterval
+        pollInterval: pollInterval,
+        browser: typeof browser === "string" ? browser : ""
     });
 }
 
@@ -39,7 +40,7 @@ function decode(serializedSnapshot) {
             return null;
         }
 
-        return JSON.parse(snapshot(savedSettings.dashboards, savedSettings.pollInterval));
+        return JSON.parse(snapshot(savedSettings.dashboards, savedSettings.pollInterval, savedSettings.browser));
     } catch (error) {
         return null;
     }

@@ -9,6 +9,7 @@ ColumnLayout {
     id: dashboard
 
     property var marketSource: null
+    property var linkOpener: null
     property var quotes: (marketSource && marketSource.quotes && marketSource.quotes.length > 0)
         ? marketSource.quotes
         : ((marketSource && marketSource.watchlist && marketSource.watchlist.length > 0)
@@ -321,6 +322,7 @@ ColumnLayout {
                     required property var modelData
                     Layout.fillWidth: true
                     quote: modelData
+                    linkOpener: dashboard.linkOpener
                 }
             }
 

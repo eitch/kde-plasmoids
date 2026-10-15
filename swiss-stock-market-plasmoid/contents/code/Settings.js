@@ -1,6 +1,6 @@
 // Keep credentials out of the independent, per-widget recovery file.
 
-function snapshot(watchlist, pollInterval, brokerProvider, brokerEndpoint, authType, displaySymbol) {
+function snapshot(watchlist, pollInterval, brokerProvider, brokerEndpoint, authType, displaySymbol, browser) {
     var items = typeof watchlist === "string" ? JSON.parse(watchlist) : watchlist;
     if (!Array.isArray(items)) {
         throw new Error("Invalid watchlist settings");
@@ -39,7 +39,8 @@ function snapshot(watchlist, pollInterval, brokerProvider, brokerEndpoint, authT
         brokerProvider: typeof brokerProvider === "string" ? brokerProvider : "yahoo",
         brokerEndpoint: typeof brokerEndpoint === "string" ? brokerEndpoint : "",
         authType: typeof authType === "string" ? authType : "none",
-        displaySymbol: typeof displaySymbol === "string" ? displaySymbol : "SMI"
+        displaySymbol: typeof displaySymbol === "string" ? displaySymbol : "SMI",
+        browser: typeof browser === "string" ? browser : ""
     });
 }
 
@@ -56,7 +57,8 @@ function decode(serializedSnapshot) {
             savedSettings.brokerProvider,
             savedSettings.brokerEndpoint,
             savedSettings.authType,
-            savedSettings.displaySymbol
+            savedSettings.displaySymbol,
+            savedSettings.browser
         ));
 
         return verified;

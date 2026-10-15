@@ -236,3 +236,28 @@ function metricsRows(metricsText) {
 
     return monitorRows;
 }
+
+function base64Encode(str) {
+    const text = String(str || "");
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    let encoded = "";
+    let c1, c2, c3, e1, e2, e3, e4;
+    let i = 0;
+    const utf8 = unescape(encodeURIComponent(text));
+    while (i < utf8.length) {
+        c1 = utf8.charCodeAt(i++);
+        c2 = utf8.charCodeAt(i++);
+        c3 = utf8.charCodeAt(i++);
+        e1 = c1 >> 2;
+        e2 = ((c1 & 3) << 4) | (c2 >> 4);
+        e3 = ((c2 & 15) << 2) | (c3 >> 6);
+        e4 = c3 & 63;
+        if (isNaN(c2)) {
+            e3 = e4 = 64;
+        } else if (isNaN(c3)) {
+            e4 = 64;
+        }
+        encoded += chars.charAt(e1) + chars.charAt(e2) + chars.charAt(e3) + chars.charAt(e4);
+    }
+    return encoded;
+}

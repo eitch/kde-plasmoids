@@ -9,6 +9,7 @@ RowLayout {
 
     required property var build
     required property color statusColor
+    property var linkOpener: null
 
     Layout.fillWidth: true
     Layout.minimumHeight: Kirigami.Units.gridUnit * 2.2
@@ -96,10 +97,16 @@ RowLayout {
         Controls.ToolTip.text: "Jump to build page"
         Controls.ToolTip.visible: hovered
         onClicked: {
-            if (buildRow.build.buildUrl) {
-                Qt.openUrlExternally(buildRow.build.buildUrl)
-            } else if (buildRow.build.jobUrl) {
-                Qt.openUrlExternally(buildRow.build.jobUrl)
+            const targetUrl = buildRow.build.buildUrl || buildRow.build.jobUrl
+            console.log("[BuildRow] Clicked open build button | targetUrl:", targetUrl, "| has linkOpener:", Boolean(buildRow.linkOpener))
+            if (!targetUrl) return
+            if (buildRow.linkOpener) {
+                buildRow.linkOpener.openUrl(targetUrl)
+            } else if (typeof root !== "undefined" && root.linkOpener) {
+                root.linkOpener.openUrl(targetUrl)
+            } else {
+                console.log("[BuildRow] Fallback to Qt.openUrlExternally")
+                Qt.openUrlExternally(targetUrl)
             }
         }
     }

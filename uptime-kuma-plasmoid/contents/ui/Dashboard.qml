@@ -78,7 +78,7 @@ Item {
             request.setRequestHeader("Accept", credential !== undefined ? "text/plain" : "application/json")
             if (credential !== undefined) {
                 const username = entry.type === "password" ? entry.username : ""
-                request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + credential))
+                request.setRequestHeader("Authorization", "Basic " + Kuma.base64Encode(username + ":" + credential))
             }
             request.send()
         } catch (error) {

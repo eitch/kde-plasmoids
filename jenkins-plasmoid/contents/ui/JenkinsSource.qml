@@ -83,7 +83,7 @@ Item {
             request.setRequestHeader("Accept", "application/json")
             if (credential !== undefined && credential !== "") {
                 const user = entry.username || ""
-                request.setRequestHeader("Authorization", "Basic " + Qt.btoa(user + ":" + credential))
+                request.setRequestHeader("Authorization", "Basic " + Jenkins.base64Encode(user + ":" + credential))
             }
             request.send()
         } catch (error) {

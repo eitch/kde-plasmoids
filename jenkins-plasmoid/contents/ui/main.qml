@@ -20,6 +20,12 @@ PlasmoidItem {
     }
 
     readonly property var wallet: plasmoidWallet
+    readonly property var linkOpener: opener
+
+    LinkOpener {
+        id: opener
+        customBrowser: plasmoid.configuration.browser || ""
+    }
 
     SettingsBackup {
         id: backup
@@ -32,7 +38,7 @@ PlasmoidItem {
         }
 
         try {
-            backup.save(plasmoid.configuration.servers, plasmoid.configuration.pollInterval)
+            backup.save(plasmoid.configuration.servers, plasmoid.configuration.pollInterval, plasmoid.configuration.browser)
             plasmoid.configuration.settingsSaved = true
             plasmoid.configuration.writeConfig()
         } catch (error) {
@@ -46,6 +52,9 @@ PlasmoidItem {
             if (savedSettings) {
                 plasmoid.configuration.servers = savedSettings.servers
                 plasmoid.configuration.pollInterval = savedSettings.pollInterval
+                if (savedSettings.browser !== undefined) {
+                    plasmoid.configuration.browser = savedSettings.browser
+                }
             }
         }
 
@@ -274,7 +283,7 @@ PlasmoidItem {
                                 display: Controls.AbstractButton.IconOnly
                                 Controls.ToolTip.text: "Open " + serverSection.modelData.url
                                 Controls.ToolTip.visible: hovered
-                                onClicked: Qt.openUrlExternally(serverSection.modelData.url)
+                                onClicked: root.linkOpener.openUrl(serverSection.modelData.url)
                             }
                         }
 
@@ -305,6 +314,7 @@ PlasmoidItem {
                                 required property var modelData
                                 build: modelData
                                 statusColor: root.tint(modelData.state)
+                                linkOpener: root.linkOpener
                             }
                         }
                     }
@@ -320,6 +330,10 @@ PlasmoidItem {
             root.persistSettings()
         }
         function onPollIntervalChanged() {
+            root.persistSettings()
+        }
+        function onBrowserChanged() {
+            console.log("[Jenkins] plasmoid.configuration.browser changed to:", plasmoid.configuration.browser)
             root.persistSettings()
         }
     }

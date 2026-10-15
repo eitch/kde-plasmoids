@@ -14,8 +14,8 @@ QtObject {
         return SettingsData.decode(storage.value("snapshot", ""))
     }
 
-    function save(dashboards, pollInterval) {
-        const serializedSnapshot = SettingsData.snapshot(dashboards, pollInterval)
+    function save(dashboards, pollInterval, browser) {
+        const serializedSnapshot = SettingsData.snapshot(dashboards, pollInterval, browser)
         storage.setValue("snapshot", serializedSnapshot)
         storage.sync()
     }

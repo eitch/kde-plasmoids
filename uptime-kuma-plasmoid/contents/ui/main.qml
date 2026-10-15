@@ -19,13 +19,20 @@ PlasmoidItem {
         instanceId: String(Plasmoid.id)
     }
 
+    readonly property var linkOpener: opener
+
+    LinkOpener {
+        id: opener
+        customBrowser: plasmoid.configuration.browser || ""
+    }
+
     function persistSettings() {
         if (!settingsReady) {
             return
         }
 
         try {
-            backup.save(plasmoid.configuration.dashboards, plasmoid.configuration.pollInterval)
+            backup.save(plasmoid.configuration.dashboards, plasmoid.configuration.pollInterval, plasmoid.configuration.browser)
             plasmoid.configuration.settingsSaved = true
             plasmoid.configuration.writeConfig()
         } catch (error) {
@@ -40,6 +47,9 @@ PlasmoidItem {
             if (savedSettings) {
                 plasmoid.configuration.dashboards = savedSettings.dashboards
                 plasmoid.configuration.pollInterval = savedSettings.pollInterval
+                if (savedSettings.browser !== undefined) {
+                    plasmoid.configuration.browser = savedSettings.browser
+                }
             }
         }
 
@@ -220,7 +230,7 @@ PlasmoidItem {
                         Controls.Button {
                             Layout.fillWidth: true
                             text: dashboard.modelData.name
-                            onClicked: Qt.openUrlExternally(dashboard.modelData.url)
+                            onClicked: root.linkOpener.openUrl(dashboard.modelData.url)
                         }
 
                         Controls.Label {
@@ -287,6 +297,11 @@ PlasmoidItem {
         }
 
         function onPollIntervalChanged() {
+            Qt.callLater(root.persistSettings)
+        }
+
+        function onBrowserChanged() {
+            console.log("[UptimeKuma] plasmoid.configuration.browser changed to:", plasmoid.configuration.browser)
             Qt.callLater(root.persistSettings)
         }
     }

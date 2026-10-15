@@ -8,6 +8,7 @@ Rectangle {
     id: card
 
     required property var quote
+    property var linkOpener: null
     property bool expanded: false
 
     Layout.fillWidth: true
@@ -40,8 +41,15 @@ Rectangle {
 
         // Main row
         RowLayout {
+            id: mainHeaderRow
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: card.expanded = !card.expanded
+                cursorShape: Qt.PointingHandCursor
+            }
 
             // Left side: Symbol, Name, Market Badge
             ColumnLayout {
@@ -208,12 +216,31 @@ Rectangle {
                     elide: Text.ElideRight
                 }
             }
-        }
-    }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: card.expanded = !card.expanded
-        cursorShape: Qt.PointingHandCursor
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.topMargin: Kirigami.Units.smallSpacing
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                Controls.Button {
+                    text: "Swissquote"
+                    icon.name: "internet-web-browser"
+                    font.pointSize: Kirigami.Theme.smallFont.pointSize
+                    Controls.ToolTip.text: "Open " + (card.quote ? (card.quote.symbol || "quote") : "") + " on Swissquote"
+                    Controls.ToolTip.visible: hovered
+                    onClicked: {
+                        const sqUrl = Market.getSwissquoteUrl(card.quote)
+                        if (card.linkOpener) {
+                            card.linkOpener.openUrl(sqUrl)
+                        } else {
+                            Qt.openUrlExternally(sqUrl)
+                        }
+                    }
+                }
+            }
+        }
     }
 }

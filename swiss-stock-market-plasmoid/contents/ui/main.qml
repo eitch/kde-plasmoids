@@ -23,6 +23,13 @@ PlasmoidItem {
         instanceId: String(Plasmoid.id)
     }
 
+    readonly property var linkOpener: opener
+
+    LinkOpener {
+        id: opener
+        customBrowser: plasmoid.configuration.browser || ""
+    }
+
     MarketSource {
         id: marketSource
         onChanged: {
@@ -58,7 +65,8 @@ PlasmoidItem {
                 plasmoid.configuration.brokerProvider,
                 plasmoid.configuration.brokerEndpoint,
                 plasmoid.configuration.authType,
-                plasmoid.configuration.displaySymbol
+                plasmoid.configuration.displaySymbol,
+                plasmoid.configuration.browser
             )
             plasmoid.configuration.settingsSaved = true
             plasmoid.configuration.writeConfig()
@@ -78,6 +86,9 @@ PlasmoidItem {
                 plasmoid.configuration.brokerEndpoint = savedSettings.brokerEndpoint
                 plasmoid.configuration.authType = savedSettings.authType
                 plasmoid.configuration.displaySymbol = savedSettings.displaySymbol
+                if (savedSettings.browser !== undefined) {
+                    plasmoid.configuration.browser = savedSettings.browser
+                }
             }
         }
 
@@ -267,6 +278,7 @@ PlasmoidItem {
         id: dashboardView
         marketSource: marketSource
         quotes: root.quotes
+        linkOpener: root.linkOpener
         onRequestConfigure: root.configure()
         onAddStockRequested: function(preset) {
             root.addPresetToWatchlist(preset)
@@ -298,6 +310,10 @@ PlasmoidItem {
             reload()
         }
         function onDisplaySymbolChanged() {
+            persistSettings()
+        }
+        function onBrowserChanged() {
+            console.log("[SwissStockMarket] plasmoid.configuration.browser changed to:", plasmoid.configuration.browser)
             persistSettings()
         }
     }

@@ -299,6 +299,28 @@ function testFormattingAndQuery() {
     assert.equal(query, "SMI,SQN");
 }
 
+function testSwissquoteUrl() {
+    assert.equal(market.getSwissquoteUrl(null), "https://www.swissquote.ch");
+    assert.equal(market.getSwissquoteUrl(""), "https://www.swissquote.ch");
+    assert.equal(market.getSwissquoteUrl("NESN"), "https://en.swissquote.com/trading/markets/search?query=NESN");
+    assert.equal(market.getSwissquoteUrl({ symbol: "SMI" }), "https://en.swissquote.com/trading/markets/search?query=SMI");
+    assert.equal(
+        market.getSwissquoteUrl({ symbol: "SQN", isin: "CH0010675863" }),
+        "https://en.swissquote.com/trading/markets/search?query=CH0010675863"
+    );
+    assert.equal(
+        market.getSwissquoteUrl({ symbol: "EURCHF", isin: "" }),
+        "https://en.swissquote.com/trading/markets/search?query=EURCHF"
+    );
+}
+
+function testBase64() {
+    assert.equal(market.base64Encode("hello:world"), "aGVsbG86d29ybGQ=");
+    assert.equal(market.base64Encode("admin:password"), "YWRtaW46cGFzc3dvcmQ=");
+    assert.equal(market.base64Encode("user:pässwörd"), Buffer.from("user:pässwörd", "utf8").toString("base64"));
+    assert.equal(market.base64Encode(""), "");
+}
+
 testEndpoints();
 testYahooFinanceHelpers();
 testNormalizeQuote();
@@ -307,5 +329,7 @@ testSimulatedQuotes();
 testParseQuotesResponse();
 testAggregation();
 testFormattingAndQuery();
+testSwissquoteUrl();
+testBase64();
 
 console.log("Market helpers, broker endpoints, search, simulation, normalization and aggregation checks passed");

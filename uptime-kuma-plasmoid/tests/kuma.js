@@ -215,6 +215,13 @@ function testDisabledMetricsMonitor() {
     assert.equal(kuma.aggregate(rowStates(kuma.groupRows(allEmptyGroups))), "unknown");
 }
 
+function testBase64() {
+    assert.equal(kuma.base64Encode("hello:world"), "aGVsbG86d29ybGQ=");
+    assert.equal(kuma.base64Encode("admin:password"), "YWRtaW46cGFzc3dvcmQ=");
+    assert.equal(kuma.base64Encode("user:pässwörd"), Buffer.from("user:pässwörd", "utf8").toString("base64"));
+    assert.equal(kuma.base64Encode(""), "");
+}
+
 testEndpoints();
 testAggregation();
 testPublicRows();
@@ -222,4 +229,5 @@ testMetricsParsing();
 testPublicGroupOrder();
 testMetricsGroupSelection();
 testDisabledMetricsMonitor();
+testBase64();
 console.log("Kuma URL, aggregation, metrics, grouping and disabled-monitor checks passed");

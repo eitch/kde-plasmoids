@@ -26,7 +26,8 @@ const savedSnapshot = settingsData.snapshot(
     "yahoo",
     "https://query1.finance.yahoo.com/v8/finance/chart/",
     "none",
-    "SQN"
+    "SQN",
+    "brave"
 );
 
 assert.ok(!savedSnapshot.includes("secret-token"));
@@ -36,6 +37,7 @@ const decoded = settingsData.decode(savedSnapshot);
 assert.equal(decoded.pollInterval, 120);
 assert.equal(decoded.brokerProvider, "yahoo");
 assert.equal(decoded.displaySymbol, "SQN");
+assert.equal(decoded.browser, "brave");
 assert.equal(JSON.parse(decoded.watchlist)[0].symbol, "SQN");
 
 const invalidSnapshots = [
@@ -80,8 +82,8 @@ function createSettingsHarness(configuration, recoverySnapshot) {
         configError: "",
         backup: {
             read: () => settingsData.decode(storedSnapshot),
-            save: (items, pollInterval, provider, endpoint, auth, displaySym) => {
-                storedSnapshot = settingsData.snapshot(items, pollInterval, provider, endpoint, auth, displaySym);
+            save: (items, pollInterval, provider, endpoint, auth, displaySym, browser) => {
+                storedSnapshot = settingsData.snapshot(items, pollInterval, provider, endpoint, auth, displaySym, browser);
             }
         },
         plasmoid: {
@@ -92,6 +94,7 @@ function createSettingsHarness(configuration, recoverySnapshot) {
                 brokerEndpoint: "https://query1.finance.yahoo.com/v8/finance/chart/",
                 authType: "none",
                 displaySymbol: "SMI",
+                browser: "",
                 settingsSaved: false,
                 writeConfig: () => {
                     ++writeCount;
@@ -113,6 +116,7 @@ function createSettingsHarness(configuration, recoverySnapshot) {
 const recoveryHarness = createSettingsHarness({}, savedSnapshot);
 recoveryHarness.context.initializeSettings();
 assert.equal(recoveryHarness.context.plasmoid.configuration.pollInterval, 120);
+assert.equal(recoveryHarness.context.plasmoid.configuration.browser, "brave");
 assert.equal(
     JSON.parse(recoveryHarness.context.plasmoid.configuration.watchlist)[0].symbol,
     "SQN"
@@ -139,7 +143,8 @@ const migrationHarness = createSettingsHarness({
     }]),
     pollInterval: 90,
     brokerProvider: "six",
-    displaySymbol: "NESN"
+    displaySymbol: "NESN",
+    browser: "firefox"
 }, savedSnapshot);
 migrationHarness.context.initializeSettings();
 assert.equal(
@@ -148,6 +153,7 @@ assert.equal(
 );
 assert.equal(settingsData.decode(migrationHarness.storedSnapshot()).pollInterval, 90);
 assert.equal(settingsData.decode(migrationHarness.storedSnapshot()).brokerProvider, "six");
+assert.equal(settingsData.decode(migrationHarness.storedSnapshot()).browser, "firefox");
 
 migrationHarness.context.plasmoid.configuration.pollInterval = 180;
 migrationHarness.context.persistSettings();

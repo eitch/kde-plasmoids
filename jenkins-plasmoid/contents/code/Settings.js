@@ -1,5 +1,5 @@
 // Keep credentials out of the independent, per-widget recovery file.
-function snapshot(servers, pollInterval) {
+function snapshot(servers, pollInterval, browser) {
     const entries = JSON.parse(servers);
     if (!Array.isArray(entries)) {
         throw new Error("Invalid server settings");
@@ -28,7 +28,8 @@ function snapshot(servers, pollInterval) {
     return JSON.stringify({
         version: 1,
         servers: JSON.stringify(savedEntries),
-        pollInterval: pollInterval
+        pollInterval: pollInterval,
+        browser: typeof browser === "string" ? browser : ""
     });
 }
 
@@ -39,7 +40,7 @@ function decode(serializedSnapshot) {
             return null;
         }
 
-        return JSON.parse(snapshot(savedSettings.servers, savedSettings.pollInterval));
+        return JSON.parse(snapshot(savedSettings.servers, savedSettings.pollInterval, savedSettings.browser));
     } catch (error) {
         return null;
     }

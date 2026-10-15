@@ -189,10 +189,18 @@ function testParseJobs() {
     assert.throws(() => jenkins.parseJobs("string"));
 }
 
+function testBase64() {
+    assert.equal(jenkins.base64Encode("hello:world"), "aGVsbG86d29ybGQ=");
+    assert.equal(jenkins.base64Encode("admin:password"), "YWRtaW46cGFzc3dvcmQ=");
+    assert.equal(jenkins.base64Encode("user:pässwörd"), Buffer.from("user:pässwörd", "utf8").toString("base64"));
+    assert.equal(jenkins.base64Encode(""), "");
+}
+
 testEndpoints();
 testColorAndResultParsing();
 testBuildState();
 testAggregation();
 testFormatting();
 testParseJobs();
+testBase64();
 console.log("Jenkins endpoint, color parsing, build state, aggregation, formatting and job parsing checks passed");
